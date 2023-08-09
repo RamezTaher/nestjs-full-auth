@@ -13,6 +13,9 @@ import { AllConfigType } from 'src/config/config.type';
 import ms from 'ms';
 import { JwtService } from '@nestjs/jwt';
 import { IAuthService } from './auth';
+import { AuthRegisterDto } from './dtos/auth-register.dto';
+import crypto from 'crypto';
+import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -84,6 +87,19 @@ export class AuthService implements IAuthService {
       tokenExpires,
       user,
     };
+  }
+
+  async registerUser(registerDto: AuthRegisterDto): Promise<void> {
+    const hash = crypto
+      .createHash('sha256')
+      .update(randomStringGenerator())
+      .digest('hex');
+
+    await this.usersService.createUser({
+      ...registerDto,
+      email: registerDto.email,
+      hash,
+    });
   }
 
   private async getTokensData(data: {

@@ -1,28 +1,22 @@
-import { Transform } from 'class-transformer';
-
 import { IsEmail, IsNotEmpty, MinLength, Validate } from 'class-validator';
-
 import { IsNotExist } from 'src/utils/validators/is-not-exists.validator';
-
+import { Transform } from 'class-transformer';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 
-export class CreateUserDto {
+export class AuthRegisterDto {
   @Transform(lowerCaseTransformer)
-  @IsNotEmpty()
   @Validate(IsNotExist, ['User'], {
     message: 'emailAlreadyExists',
   })
   @IsEmail()
-  email: string | null;
+  email: string;
 
   @MinLength(6)
-  password?: string;
+  password: string;
 
   @IsNotEmpty()
-  firstName: string | null;
+  firstName: string;
 
   @IsNotEmpty()
-  lastName: string | null;
-
-  hash?: string | null;
+  lastName: string;
 }

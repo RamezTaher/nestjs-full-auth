@@ -59,6 +59,11 @@ export class User extends EntityHelper {
   @CreateDateColumn()
   createdAt: Date;
 
+  @Column({ type: String, nullable: true })
+  @Index()
+  @Exclude({ toPlainOnly: true })
+  hash: string | null;
+
   @UpdateDateColumn()
   updatedAt: Date;
 }
