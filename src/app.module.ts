@@ -6,6 +6,7 @@ import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { SessionModule } from './session/session.module';
 import appConfig from './config/app.config';
 
 @Module({
@@ -24,8 +25,7 @@ import appConfig from './config/app.config';
     }),
     UsersModule,
     AuthModule,
+    SessionModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

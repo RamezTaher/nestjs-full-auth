@@ -19,7 +19,15 @@ export type DatabaseConfig = {
   synchronize?: boolean;
 };
 
+export type AuthConfig = {
+  secret?: string;
+  expires?: string;
+  refreshSecret?: string;
+  refreshExpires?: string;
+};
+
 export type AllConfigType = {
   app: AppConfig;
   database: DatabaseConfig;
+  auth: AuthConfig;
 };
