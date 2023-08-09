@@ -14,6 +14,7 @@ import bcrypt from 'bcryptjs';
 import { EntityHelper } from 'src/utils/entity-helper';
 
 import { Exclude } from 'class-transformer';
+import { AuthProvidersEnum } from 'src/auth/enums/auth-providers.enum';
 
 @Entity()
 export class User extends EntityHelper {
@@ -43,6 +44,9 @@ export class User extends EntityHelper {
       this.password = await bcrypt.hash(this.password, salt);
     }
   }
+
+  @Column({ default: AuthProvidersEnum.email })
+  provider: string;
 
   @Index()
   @Column({ type: String, nullable: true })
