@@ -26,8 +26,21 @@ export type AuthConfig = {
   refreshExpires?: string;
 };
 
+export type MailerConfig = {
+  port: number;
+  host?: string;
+  user?: string;
+  password?: string;
+  defaultEmail?: string;
+  defaultName?: string;
+  ignoreTLS: boolean;
+  secure: boolean;
+  requireTLS: boolean;
+};
+
 export type AllConfigType = {
   app: AppConfig;
   database: DatabaseConfig;
   auth: AuthConfig;
+  mailer: MailerConfig;
 };
