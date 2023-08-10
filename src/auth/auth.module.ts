@@ -19,8 +19,8 @@ import { AnonymousStrategy } from './strategies/anonymous.strategy';
   providers: [
     IsExist,
     IsNotExist,
-    JwtStrategy,
     JwtRefreshStrategy,
+    JwtStrategy,
     AnonymousStrategy,
     {
       provide: Services.AUTH,

@@ -5,6 +5,8 @@ import { AuthEmailLoginDto } from './dtos/auth-email-login.dto';
 import { LoginResponseType } from './types/login-response.type';
 import { AuthProvidersEnum } from './enums/auth-providers.enum';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+
 import { User } from 'src/users/entities/user.entity';
 import { ISessionService } from 'src/session/session';
 import { Session } from 'src/session/entities/session.entity';
@@ -14,7 +16,6 @@ import ms from 'ms';
 import { JwtService } from '@nestjs/jwt';
 import { IAuthService } from './auth';
 import { AuthRegisterDto } from './dtos/auth-register.dto';
-import crypto from 'crypto';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 
 @Injectable()
@@ -94,6 +95,8 @@ export class AuthService implements IAuthService {
       .createHash('sha256')
       .update(randomStringGenerator())
       .digest('hex');
+
+    console.log(hash);
 
     await this.usersService.createUser({
       ...registerDto,
