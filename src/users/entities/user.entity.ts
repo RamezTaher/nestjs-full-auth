@@ -10,11 +10,11 @@ import {
   BeforeUpdate,
 } from 'typeorm';
 
-import bcrypt from 'bcryptjs';
 import { EntityHelper } from 'src/utils/entity-helper';
 
 import { Exclude } from 'class-transformer';
 import { AuthProvidersEnum } from 'src/auth/enums/auth-providers.enum';
+import { hashPassword } from 'src/utils/helpers';
 
 @Entity()
 export class User extends EntityHelper {
@@ -40,8 +40,7 @@ export class User extends EntityHelper {
   @BeforeUpdate()
   async setPassword() {
     if (this.previousPassword !== this.password && this.password) {
-      const salt = await bcrypt.genSalt();
-      this.password = await bcrypt.hash(this.password, salt);
+      this.password = await hashPassword(this.password);
     }
   }
 

@@ -4,7 +4,6 @@ import { Services } from 'src/utils/constants';
 import { AuthEmailLoginDto } from './dtos/auth-email-login.dto';
 import { LoginResponseType } from './types/login-response.type';
 import { AuthProvidersEnum } from './enums/auth-providers.enum';
-import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
 import { User } from 'src/users/entities/user.entity';
@@ -17,6 +16,7 @@ import { JwtService } from '@nestjs/jwt';
 import { IAuthService } from './auth';
 import { AuthRegisterDto } from './dtos/auth-register.dto';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
+import { compareHash } from 'src/utils/helpers';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -56,10 +56,7 @@ export class AuthService implements IAuthService {
       );
     }
 
-    const isValidPassword = await bcrypt.compare(
-      loginDto.password,
-      user.password,
-    );
+    const isValidPassword = await compareHash(loginDto.password, user.password);
 
     if (!isValidPassword) {
       throw new HttpException(
