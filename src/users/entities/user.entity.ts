@@ -10,7 +10,7 @@ import {
   BeforeUpdate,
 } from 'typeorm';
 
-import * as bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import { EntityHelper } from 'src/utils/entity-helper';
 
 import { Exclude } from 'class-transformer';
