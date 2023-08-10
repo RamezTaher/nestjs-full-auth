@@ -6,7 +6,7 @@ import { LoginResponseType } from './types/login-response.type';
 import { AuthProvidersEnum } from './enums/auth-providers.enum';
 import crypto from 'crypto';
 
-import { User } from 'src/users/entities/user.entity';
+import { User, UserStatus } from 'src/users/entities/user.entity';
 import { ISessionService } from 'src/session/session';
 import { Session } from 'src/session/entities/session.entity';
 import { ConfigService } from '@nestjs/config';
@@ -93,11 +93,10 @@ export class AuthService implements IAuthService {
       .update(randomStringGenerator())
       .digest('hex');
 
-    console.log(hash);
-
     await this.usersService.createUser({
       ...registerDto,
       email: registerDto.email,
+      status: UserStatus.Inactive,
       hash,
     });
   }

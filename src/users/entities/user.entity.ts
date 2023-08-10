@@ -16,6 +16,11 @@ import { Exclude } from 'class-transformer';
 import { AuthProvidersEnum } from 'src/auth/enums/auth-providers.enum';
 import { hashPassword } from 'src/utils/helpers';
 
+export enum UserStatus {
+  Active = 'active',
+  Inactive = 'inactive',
+}
+
 @Entity()
 export class User extends EntityHelper {
   @PrimaryGeneratedColumn()
@@ -46,6 +51,9 @@ export class User extends EntityHelper {
 
   @Column({ default: AuthProvidersEnum.email })
   provider: string;
+
+  @Column({ type: 'enum', enum: UserStatus, default: UserStatus.Inactive })
+  status: UserStatus;
 
   @Index()
   @Column({ type: String, nullable: true })
