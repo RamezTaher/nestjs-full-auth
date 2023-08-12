@@ -24,6 +24,8 @@ export class MailerService implements IMailerService {
         user: configService.get<string>('mailer.user', { infer: true }),
         pass: configService.get<string>('mailer.password', { infer: true }),
       },
+
+      debug: true,
     });
   }
 
