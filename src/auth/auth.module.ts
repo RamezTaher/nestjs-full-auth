@@ -11,9 +11,16 @@ import { IsNotExist } from 'src/utils/validators/is-not-exists.validator';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { AnonymousStrategy } from './strategies/anonymous.strategy';
+import { MailsModule } from 'src/mails/mails.module';
 
 @Module({
-  imports: [UsersModule, SessionModule, PassportModule, JwtModule.register({})],
+  imports: [
+    UsersModule,
+    SessionModule,
+    MailsModule,
+    PassportModule,
+    JwtModule.register({}),
+  ],
 
   controllers: [AuthController],
   providers: [

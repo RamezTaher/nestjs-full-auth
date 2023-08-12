@@ -4,9 +4,10 @@ import nodemailer from 'nodemailer';
 import { AllConfigType } from 'src/config/config.type';
 import Handlebars from 'handlebars';
 import fs from 'node:fs/promises';
+import { IMailerService } from './mailer';
 
 @Injectable()
-export class MailerService {
+export class MailerService implements IMailerService {
   private readonly transporter: nodemailer.Transporter;
   constructor(private readonly configService: ConfigService<AllConfigType>) {
     this.transporter = nodemailer.createTransport({

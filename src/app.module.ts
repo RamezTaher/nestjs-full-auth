@@ -8,14 +8,16 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
+import { MailsModule } from './mails/mails.module';
 import appConfig from './config/app.config';
 import authConfig from './config/auth.config';
+import mailerConfig from './config/mailer.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, appConfig, authConfig],
+      load: [databaseConfig, appConfig, authConfig, mailerConfig],
       envFilePath: ['.env'],
     }),
     TypeOrmModule.forRootAsync({
@@ -29,6 +31,7 @@ import authConfig from './config/auth.config';
     AuthModule,
     SessionModule,
     MailerModule,
+    MailsModule,
   ],
 })
 export class AppModule {}

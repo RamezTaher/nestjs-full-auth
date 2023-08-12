@@ -17,11 +17,13 @@ import { IAuthService } from './auth';
 import { AuthRegisterDto } from './dtos/auth-register.dto';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 import { compareHash } from 'src/utils/helpers';
+import { IMailsService } from 'src/mails/mails';
 
 @Injectable()
 export class AuthService implements IAuthService {
   constructor(
     @Inject(Services.USERS) private readonly usersService: IUsersService,
+    @Inject(Services.MAILS) private readonly mailsService: IMailsService,
     @Inject(Services.SESSION) private readonly sessionService: ISessionService,
     private readonly configService: ConfigService<AllConfigType>,
     private readonly jwtService: JwtService,
@@ -98,6 +100,13 @@ export class AuthService implements IAuthService {
       email: registerDto.email,
       status: UserStatus.Inactive,
       hash,
+    });
+
+    await this.mailsService.confirmRegisterUser({
+      to: registerDto.email,
+      data: {
+        hash,
+      },
     });
   }
 

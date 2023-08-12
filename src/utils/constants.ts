@@ -8,4 +8,5 @@ export enum Services {
   USERS = 'USERS_SERVICE',
   SESSION = 'SESSION_SERVICE',
   MAILER = 'MAILER_SERVICE',
+  MAILS = 'MAILS_SERVICE',
 }
