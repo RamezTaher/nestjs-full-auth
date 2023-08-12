@@ -18,6 +18,8 @@ import { AuthRegisterDto } from './dtos/auth-register.dto';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 import { compareHash } from 'src/utils/helpers';
 import { IMailsService } from 'src/mails/mails';
+import { JwtPayloadType } from './strategies/types/jwt-payload.type';
+import { NullableType } from 'src/utils/types/nullable.type';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -107,6 +109,12 @@ export class AuthService implements IAuthService {
       data: {
         hash,
       },
+    });
+  }
+
+  async status(userJwtPayload: JwtPayloadType): Promise<NullableType<User>> {
+    return await this.usersService.findOneUser({
+      id: userJwtPayload.id,
     });
   }
 
