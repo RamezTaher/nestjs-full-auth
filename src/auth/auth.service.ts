@@ -118,6 +118,26 @@ export class AuthService implements IAuthService {
     });
   }
 
+  async confirmEmail(hash: string): Promise<void> {
+    const user = await this.usersService.findOneUser({
+      hash,
+    });
+
+    if (!user) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: `notFound`,
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    user.hash = null;
+    user.status = UserStatus.Active;
+    await this.usersService.saveUser(user);
+  }
+
   private async getTokensData(data: {
     id: User['id'];
     sessionId: Session['id'];
