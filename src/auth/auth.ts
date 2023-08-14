@@ -11,4 +11,5 @@ export interface IAuthService {
   status(userJwtPayload: JwtPayloadType): Promise<NullableType<User>>;
   confirmEmail(hash: string): Promise<void>;
   forgotPassword(email: string): Promise<void>;
+  resetPassword(hash: string, password: string): Promise<void>;
 }

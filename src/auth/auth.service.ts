@@ -176,6 +176,37 @@ export class AuthService implements IAuthService {
     });
   }
 
+  async resetPassword(hash: string, password: string): Promise<void> {
+    const forgotReq = await this.forgotPasswordService.findOne({
+      where: {
+        hash,
+      },
+    });
+
+    if (!forgotReq) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: {
+            hash: `notFound`,
+          },
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    const user = forgotReq.user;
+    user.password = password;
+
+    await this.sessionService.softDelete({
+      user: {
+        id: user.id,
+      },
+    });
+    await this.usersService.saveUser(user);
+    await this.forgotPasswordService.softDelete(forgotReq.id);
+  }
+
   private async getTokensData(data: {
     id: User['id'];
     sessionId: Session['id'];

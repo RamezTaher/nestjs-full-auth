@@ -20,6 +20,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { User } from 'src/users/entities/user.entity';
 import { AuthForgotPasswordDto } from './dtos/auth-forgot-password.dto';
+import { AuthResetPasswordDto } from './dtos/auth-reset-password.dto';
 
 @Controller(Routes.AUTH)
 export class AuthController {
@@ -61,5 +62,14 @@ export class AuthController {
     @Body() forgotPasswordDto: AuthForgotPasswordDto,
   ): Promise<void> {
     return this.authService.forgotPassword(forgotPasswordDto.email);
+  }
+
+  @Post('reset-password')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  resetPassword(@Body() resetPasswordDto: AuthResetPasswordDto): Promise<void> {
+    return this.authService.resetPassword(
+      resetPasswordDto.hash,
+      resetPasswordDto.password,
+    );
   }
 }
