@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
 import { MailsModule } from './mails/mails.module';
+import { ForgotPasswordModule } from './forgot-password/forgot-password.module';
 import appConfig from './config/app.config';
 import authConfig from './config/auth.config';
 import mailerConfig from './config/mailer.config';
@@ -32,6 +33,7 @@ import mailerConfig from './config/mailer.config';
     SessionModule,
     MailerModule,
     MailsModule,
+    ForgotPasswordModule,
   ],
 })
 export class AppModule {}
