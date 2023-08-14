@@ -13,4 +13,5 @@ export interface IUsersService {
   ): Promise<User[]>;
   updateUser(id: User['id'], payload: DeepPartial<User>): Promise<User>;
   deleteUser(id: User['id']): Promise<void>;
+  saveUser(user: User): Promise<User>;
 }

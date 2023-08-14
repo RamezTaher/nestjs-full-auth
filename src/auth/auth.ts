@@ -9,4 +9,5 @@ export interface IAuthService {
   validateLogin(loginDto: AuthEmailLoginDto): Promise<LoginResponseType>;
   registerUser(registerDto: AuthRegisterDto): Promise<void>;
   status(userJwtPayload: JwtPayloadType): Promise<NullableType<User>>;
+  confirmEmail(hash: string): Promise<void>;
 }

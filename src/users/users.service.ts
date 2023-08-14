@@ -47,4 +47,8 @@ export class UsersService implements IUsersService {
   async deleteUser(id: User['id']): Promise<void> {
     await this.usersRepository.softDelete(id);
   }
+
+  async saveUser(user: User): Promise<User> {
+    return this.usersRepository.save(user);
+  }
 }
