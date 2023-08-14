@@ -12,6 +12,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { AnonymousStrategy } from './strategies/anonymous.strategy';
 import { MailsModule } from 'src/mails/mails.module';
+import { ForgotPasswordModule } from 'src/forgot-password/forgot-password.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { MailsModule } from 'src/mails/mails.module';
     SessionModule,
     MailsModule,
     PassportModule,
+    ForgotPasswordModule,
     JwtModule.register({}),
   ],
 

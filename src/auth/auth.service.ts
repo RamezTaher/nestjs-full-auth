@@ -20,6 +20,7 @@ import { compareHash } from 'src/utils/helpers';
 import { IMailsService } from 'src/mails/mails';
 import { JwtPayloadType } from './strategies/types/jwt-payload.type';
 import { NullableType } from 'src/utils/types/nullable.type';
+import { IForgotPasswordService } from 'src/forgot-password/forgot-password';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -27,6 +28,9 @@ export class AuthService implements IAuthService {
     @Inject(Services.USERS) private readonly usersService: IUsersService,
     @Inject(Services.MAILS) private readonly mailsService: IMailsService,
     @Inject(Services.SESSION) private readonly sessionService: ISessionService,
+    @Inject(Services.FORGOT_PASSWORD)
+    private readonly forgotPasswordService: IForgotPasswordService,
+
     private readonly configService: ConfigService<AllConfigType>,
     private readonly jwtService: JwtService,
   ) {}
@@ -136,6 +140,40 @@ export class AuthService implements IAuthService {
     user.hash = null;
     user.status = UserStatus.Active;
     await this.usersService.saveUser(user);
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    const user = await this.usersService.findOneUser({
+      email,
+    });
+
+    if (!user) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: {
+            email: 'emailNotExists',
+          },
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    const hash = crypto
+      .createHash('sha256')
+      .update(randomStringGenerator())
+      .digest('hex');
+    await this.forgotPasswordService.create({
+      hash,
+      user,
+    });
+
+    await this.mailsService.forgotPassword({
+      to: email,
+      data: {
+        hash,
+      },
+    });
   }
 
   private async getTokensData(data: {

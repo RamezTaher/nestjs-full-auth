@@ -19,6 +19,7 @@ import { AuthConfirmEmailDto } from './dtos/auth-confirm-email.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { User } from 'src/users/entities/user.entity';
+import { AuthForgotPasswordDto } from './dtos/auth-forgot-password.dto';
 
 @Controller(Routes.AUTH)
 export class AuthController {
@@ -52,5 +53,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   public status(@Request() request): Promise<NullableType<User>> {
     return this.authService.status(request.user);
+  }
+
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async forgotPassword(
+    @Body() forgotPasswordDto: AuthForgotPasswordDto,
+  ): Promise<void> {
+    return this.authService.forgotPassword(forgotPasswordDto.email);
   }
 }
