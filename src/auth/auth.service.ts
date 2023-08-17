@@ -96,7 +96,7 @@ export class AuthService implements IAuthService {
     };
   }
   async validateSocialLogin(
-    authProvider: string,
+    authProvider: AuthProvidersEnum,
     socialData: SocialType,
   ): Promise<LoginResponseType> {
     const user = await this.usersService.findOneUser({
@@ -105,28 +105,13 @@ export class AuthService implements IAuthService {
     });
 
     if (!user) {
-      const user = await this.usersService.createUser({
+      await this.usersService.createUser({
         email: socialData.email ?? null,
         firstName: socialData.firstName ?? null,
         lastName: socialData.lastName ?? null,
         status: UserStatus.Active,
+        provider: authProvider,
       });
-
-      user = await this.usersService.findOne({
-        id: user.id,
-      });
-    }
-
-    if (!user) {
-      throw new HttpException(
-        {
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            user: 'userNotFound',
-          },
-        },
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
     }
 
     const session = await this.sessionService.create({
@@ -139,7 +124,6 @@ export class AuthService implements IAuthService {
       tokenExpires,
     } = await this.getTokensData({
       id: user.id,
-      role: user.role,
       sessionId: session.id,
     });
 

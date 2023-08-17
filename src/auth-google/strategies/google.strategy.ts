@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { AllConfigType } from 'src/config/config.type';
 import { Services } from 'src/utils/constants';
 import { IAuthService } from 'src/auth/auth';
+import { AuthProvidersEnum } from 'src/auth/enums/auth-providers.enum';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
@@ -30,10 +31,14 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     console.log(accessToken);
     console.log(refreshToken);
     console.log(profile);
-    const user = await this.authService.validateLogin({
-      email: profile.emails[0].value,
-      displayName: profile.displayName,
-    });
+    const user = await this.authService.validateSocialLogin(
+      AuthProvidersEnum.google,
+      {
+        email: profile.emails[0].value,
+        firstName: profile.name.familyName,
+        lastName: profile.name.givenName,
+      },
+    );
     console.log('Validate');
     console.log(user);
     return user || null;

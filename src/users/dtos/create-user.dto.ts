@@ -6,6 +6,7 @@ import { IsNotExist } from 'src/utils/validators/is-not-exists.validator';
 
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 import { UserStatus } from '../entities/user.entity';
+import { AuthProvidersEnum } from 'src/auth/enums/auth-providers.enum';
 
 export class CreateUserDto {
   @Transform(lowerCaseTransformer)
@@ -25,7 +26,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string | null;
 
-  status: UserStatus;
+  provider?: AuthProvidersEnum;
+  status?: UserStatus;
 
   hash?: string | null;
 }
