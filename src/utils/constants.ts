@@ -1,5 +1,6 @@
 export enum Routes {
   AUTH = 'auth',
+  AUTH_GOOGLE = 'auth/google',
   USERS = 'users',
 }
 
@@ -10,4 +11,5 @@ export enum Services {
   MAILER = 'MAILER_SERVICE',
   MAILS = 'MAILS_SERVICE',
   FORGOT_PASSWORD = 'FORGOT_PASSWORD_SERVICE',
+  AUTH_GOOGLE = 'AUTH_GOOGLE_SERVICE',
 }

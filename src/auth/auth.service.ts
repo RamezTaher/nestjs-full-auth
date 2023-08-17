@@ -21,6 +21,7 @@ import { IMailsService } from 'src/mails/mails';
 import { JwtPayloadType } from './strategies/types/jwt-payload.type';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { IForgotPasswordService } from 'src/forgot-password/forgot-password';
+import { SocialType } from 'src/social/types/social.type';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -90,6 +91,61 @@ export class AuthService implements IAuthService {
     return {
       refreshToken,
       token,
+      tokenExpires,
+      user,
+    };
+  }
+  async validateSocialLogin(
+    authProvider: string,
+    socialData: SocialType,
+  ): Promise<LoginResponseType> {
+    const user = await this.usersService.findOneUser({
+      email: socialData.email.toLocaleLowerCase(),
+      provider: authProvider,
+    });
+
+    if (!user) {
+      const user = await this.usersService.createUser({
+        email: socialData.email ?? null,
+        firstName: socialData.firstName ?? null,
+        lastName: socialData.lastName ?? null,
+        status: UserStatus.Active,
+      });
+
+      user = await this.usersService.findOne({
+        id: user.id,
+      });
+    }
+
+    if (!user) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: {
+            user: 'userNotFound',
+          },
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    const session = await this.sessionService.create({
+      user,
+    });
+
+    const {
+      token: jwtToken,
+      refreshToken,
+      tokenExpires,
+    } = await this.getTokensData({
+      id: user.id,
+      role: user.role,
+      sessionId: session.id,
+    });
+
+    return {
+      refreshToken,
+      token: jwtToken,
       tokenExpires,
       user,
     };

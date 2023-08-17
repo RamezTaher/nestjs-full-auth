@@ -10,15 +10,17 @@ import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
 import { MailsModule } from './mails/mails.module';
 import { ForgotPasswordModule } from './forgot-password/forgot-password.module';
+import { AuthGoogleModule } from './auth-google/auth-google.module';
 import appConfig from './config/app.config';
 import authConfig from './config/auth.config';
 import mailerConfig from './config/mailer.config';
+import googleConfig from './config/google.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, appConfig, authConfig, mailerConfig],
+      load: [databaseConfig, appConfig, authConfig, mailerConfig, googleConfig],
       envFilePath: ['.env'],
     }),
     TypeOrmModule.forRootAsync({
@@ -34,6 +36,7 @@ import mailerConfig from './config/mailer.config';
     MailerModule,
     MailsModule,
     ForgotPasswordModule,
+    AuthGoogleModule,
   ],
 })
 export class AppModule {}

@@ -38,9 +38,15 @@ export type MailerConfig = {
   requireTLS: boolean;
 };
 
+export type GoogleConfig = {
+  clientId?: string;
+  clientSecret?: string;
+};
+
 export type AllConfigType = {
   app: AppConfig;
   database: DatabaseConfig;
   auth: AuthConfig;
   mailer: MailerConfig;
+  google: GoogleConfig;
 };
