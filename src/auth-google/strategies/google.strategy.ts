@@ -14,10 +14,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     private readonly configService: ConfigService<AllConfigType>,
   ) {
     super({
-      clientID: configService.get<string>('google.clientID', {
+      clientID: configService.get<string>('google.clientId', {
         infer: true,
       }),
-      clientSecret: configService.get<string>('google.clientID', {
+      clientSecret: configService.get<string>('google.clientSecret', {
         infer: true,
       }),
       callbackURL: configService.get<string>('google.callbackURL', {
@@ -34,6 +34,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     const user = await this.authService.validateSocialLogin(
       AuthProvidersEnum.google,
       {
+        id: profile.id,
         email: profile.emails[0].value,
         firstName: profile.name.familyName,
         lastName: profile.name.givenName,
