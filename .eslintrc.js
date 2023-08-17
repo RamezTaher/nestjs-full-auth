@@ -26,6 +26,16 @@ module.exports = {
     'require-await': 'off',
     '@typescript-eslint/require-await': 'error',
     '@typescript-eslint/no-floating-promises': 'error',
+
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        extendDefaults: true,
+        types: {
+          Function: false,
+        },
+      },
+    ],
     'no-restricted-syntax': [
       'error',
       {
