@@ -33,12 +33,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
       {
         id: profile.id,
         email: profile.emails[0].value,
-        firstName: profile.name.familyName,
-        lastName: profile.name.givenName,
+        firstName: profile.name.givenName,
+        lastName: profile.name.familyName,
       },
     );
-
-    console.log(user);
 
     return user || null;
   }

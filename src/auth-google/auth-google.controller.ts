@@ -5,6 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { User } from 'src/users/entities/user.entity';
 import { IAuthService } from 'src/auth/auth';
+import { AuthProvidersEnum } from 'src/auth/enums/auth-providers.enum';
 
 @Controller(Routes.AUTH)
 export class AuthGoogleController {
@@ -16,11 +17,20 @@ export class AuthGoogleController {
     return { msg: 'Google Authentication' };
   }
 
-  // api/auth/google/redirect
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
-  handleRedirect() {
-    return { msg: 'OK' };
+  async handleRedirect(@Request() req) {
+    const user = await this.authService.validateSocialLogin(
+      AuthProvidersEnum.google,
+      {
+        id: req.user.user.id,
+        firstName: req.user.user.firstName,
+        lastName: req.user.user.lastName,
+        email: req.user.user.email,
+      },
+    );
+
+    return user;
   }
 
   @Get('status')
