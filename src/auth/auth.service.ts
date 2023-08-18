@@ -118,18 +118,14 @@ export class AuthService implements IAuthService {
       user,
     });
 
-    const {
-      token: jwtToken,
-      refreshToken,
-      tokenExpires,
-    } = await this.getTokensData({
+    const { token, refreshToken, tokenExpires } = await this.getTokensData({
       id: user.id,
       sessionId: session.id,
     });
 
     return {
       refreshToken,
-      token: jwtToken,
+      token,
       tokenExpires,
       user,
     };

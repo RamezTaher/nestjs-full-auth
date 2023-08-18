@@ -1,10 +1,15 @@
-import { Controller, Get, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, UseGuards, Request, Inject } from '@nestjs/common';
+import { Routes, Services } from 'src/utils/constants';
 import { GoogleAuthGuard } from './guards/google.guard';
-import { Request } from 'express';
-import { Routes } from 'src/utils/constants';
+import { AuthGuard } from '@nestjs/passport';
+import { NullableType } from 'src/utils/types/nullable.type';
+import { User } from 'src/users/entities/user.entity';
+import { IAuthService } from 'src/auth/auth';
 
 @Controller(Routes.AUTH)
 export class AuthGoogleController {
+  constructor(@Inject(Services.AUTH) private authService: IAuthService) {}
+
   @Get('google/login')
   @UseGuards(GoogleAuthGuard)
   handleLogin() {
@@ -19,12 +24,8 @@ export class AuthGoogleController {
   }
 
   @Get('status')
-  user(@Req() request: Request) {
-    console.log(request.user);
-    if (request.user) {
-      return { msg: 'Authenticated' };
-    } else {
-      return { msg: 'Not Authenticated' };
-    }
+  @UseGuards(AuthGuard('jwt'))
+  public status(@Request() request): Promise<NullableType<User>> {
+    return this.authService.status(request.user);
   }
 }
