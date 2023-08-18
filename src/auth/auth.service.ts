@@ -99,33 +99,68 @@ export class AuthService implements IAuthService {
     authProvider: AuthProvidersEnum,
     socialData: SocialType,
   ): Promise<LoginResponseType> {
-    const user = await this.usersService.findOneUser({
-      email: socialData.email.toLocaleLowerCase(),
+    let user: NullableType<User>;
+    const socialEmail = socialData.email?.toLowerCase();
+
+    const userByEmail = await this.usersService.findOneUser({
+      email: socialEmail,
+    });
+
+    user = await this.usersService.findOneUser({
+      socialId: socialData.id,
       provider: authProvider,
     });
 
-    if (!user) {
-      await this.usersService.createUser({
-        email: socialData.email ?? null,
+    if (user) {
+      if (socialEmail && !userByEmail) {
+        user.email = socialEmail;
+      }
+      await this.usersService.saveUser(user);
+    } else if (userByEmail) {
+      user = userByEmail;
+    } else {
+      user = await this.usersService.createUser({
+        email: socialEmail ?? null,
         firstName: socialData.firstName ?? null,
         lastName: socialData.lastName ?? null,
-        status: UserStatus.Active,
+        socialId: socialData.id,
         provider: authProvider,
+        status: UserStatus.Active,
       });
+
+      user = await this.usersService.findOneUser({
+        id: user.id,
+      });
+    }
+
+    if (!user) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: {
+            user: 'userNotFound',
+          },
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
 
     const session = await this.sessionService.create({
       user,
     });
 
-    const { token, refreshToken, tokenExpires } = await this.getTokensData({
+    const {
+      token: jwtToken,
+      refreshToken,
+      tokenExpires,
+    } = await this.getTokensData({
       id: user.id,
       sessionId: session.id,
     });
 
     return {
       refreshToken,
-      token,
+      token: jwtToken,
       tokenExpires,
       user,
     };

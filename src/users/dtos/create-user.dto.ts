@@ -28,6 +28,7 @@ export class CreateUserDto {
 
   provider?: AuthProvidersEnum;
   status?: UserStatus;
+  socialId?: string | null;
 
   hash?: string | null;
 }
