@@ -183,6 +183,7 @@ export class AuthService implements IAuthService {
       to: registerDto.email,
       data: {
         hash,
+        user: registerDto.firstName,
       },
     });
   }
@@ -243,6 +244,7 @@ export class AuthService implements IAuthService {
       to: email,
       data: {
         hash,
+        user: user.firstName,
       },
     });
   }

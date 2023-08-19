@@ -16,19 +16,14 @@ export class MailsService implements IMailsService {
   ) {}
 
   async confirmRegisterUser(
-    mailData: MailData<{ hash: string }>,
+    mailData: MailData<{ hash: string; user: string }>,
   ): Promise<void> {
-    const emailConfirmTitle = 'Confirm email';
-    const text1 = 'Hello Sir,';
-    const text2 = 'You’re almost done creating your account';
-    const text3 =
-      'Simply click the big green button below to verify your email address.';
     await this.mailerService.sendMail({
       to: mailData.to,
-      subject: emailConfirmTitle,
+      subject: 'Email Confirmation',
       text: `${this.configService.get('app.frontendDomain', {
         infer: true,
-      })}/confirm-email/${mailData.data.hash} ${emailConfirmTitle}`,
+      })}/confirm-email/${mailData.data.hash}`,
       templatePath: path.join(
         this.configService.getOrThrow('app.workingDirectory', {
           infer: true,
@@ -39,33 +34,26 @@ export class MailsService implements IMailsService {
         'confirm.hbs',
       ),
       context: {
-        title: emailConfirmTitle,
-        url: `${this.configService.get<string>('app.frontendDomain', {
-          infer: true,
-        })}/confirm-email/${mailData.data.hash}`,
-        actionTitle: emailConfirmTitle,
-        app_name: this.configService.get<string>('app.name', { infer: true }),
-        text1,
-        text2,
-        text3,
+        username: mailData.data.user,
+        confirmationLink: `${this.configService.get<string>(
+          'app.frontendDomain',
+          {
+            infer: true,
+          },
+        )}/confirm-email/${mailData.data.hash}`,
       },
     });
   }
 
-  async forgotPassword(mailData: MailData<{ hash: string }>): Promise<void> {
-    const resetPasswordTitle = 'Reset your password';
-    const text1 = 'Trouble signing in?';
-    const text2 = 'Resetting your password is easy.';
-    const text3 =
-      'Just press the button below and follow the instructions. We’ll have you up and running in no time.';
-    const text4 =
-      'If you did not make this request then please ignore this email.';
+  async forgotPassword(
+    mailData: MailData<{ hash: string; user: string }>,
+  ): Promise<void> {
     await this.mailerService.sendMail({
       to: mailData.to,
-      subject: resetPasswordTitle,
+      subject: 'Password Reset',
       text: `${this.configService.get<string>('app.frontendDomain', {
         infer: true,
-      })}/password-change/${mailData.data.hash} ${resetPasswordTitle}`,
+      })}/password-change/${mailData.data.hash}`,
       templatePath: path.join(
         this.configService.getOrThrow<string>('app.workingDirectory', {
           infer: true,
@@ -76,18 +64,10 @@ export class MailsService implements IMailsService {
         'reset-password.hbs',
       ),
       context: {
-        title: resetPasswordTitle,
-        url: `${this.configService.get<string>('app.frontendDomain', {
+        username: mailData.data.user,
+        resetLink: `${this.configService.get<string>('app.frontendDomain', {
           infer: true,
         })}/password-change/${mailData.data.hash}`,
-        actionTitle: resetPasswordTitle,
-        app_name: this.configService.get<string>('app.name', {
-          infer: true,
-        }),
-        text1,
-        text2,
-        text3,
-        text4,
       },
     });
   }
