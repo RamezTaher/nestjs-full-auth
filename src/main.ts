@@ -26,7 +26,9 @@ async function bootstrap() {
 
   const options = new DocumentBuilder()
     .setTitle('Nest Full Auth API')
-    .setDescription('API docs')
+    .setDescription(
+      'NestJS boilerplate. Auth, TypeORM, MySql, Mailing, Google OAuth20',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .build();
