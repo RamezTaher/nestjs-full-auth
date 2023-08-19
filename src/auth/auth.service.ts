@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { IUsersService } from 'src/users/users';
 import { Services } from 'src/utils/constants';
 import { AuthEmailLoginDto } from './dtos/auth-email-login.dto';
@@ -22,6 +28,7 @@ import { JwtPayloadType } from './strategies/types/jwt-payload.type';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { IForgotPasswordService } from 'src/forgot-password/forgot-password';
 import { SocialType } from 'src/social/types/social.type';
+import { JwtRefreshPayloadType } from './strategies/types/jwt-refresh-payload.type';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -278,6 +285,37 @@ export class AuthService implements IAuthService {
     });
     await this.usersService.saveUser(user);
     await this.forgotPasswordService.softDelete(forgotReq.id);
+  }
+
+  async refreshToken(
+    data: Pick<JwtRefreshPayloadType, 'sessionId'>,
+  ): Promise<Omit<LoginResponseType, 'user'>> {
+    const session = await this.sessionService.findOne({
+      where: {
+        id: data.sessionId,
+      },
+    });
+
+    if (!session) {
+      throw new UnauthorizedException();
+    }
+
+    const { token, refreshToken, tokenExpires } = await this.getTokensData({
+      id: session.user.id,
+      sessionId: session.id,
+    });
+
+    return {
+      token,
+      refreshToken,
+      tokenExpires,
+    };
+  }
+
+  async logout(data: Pick<JwtRefreshPayloadType, 'sessionId'>) {
+    return this.sessionService.softDelete({
+      id: data.sessionId,
+    });
   }
 
   private async getTokensData(data: {

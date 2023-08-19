@@ -6,6 +6,7 @@ import { User } from 'src/users/entities/user.entity';
 import { JwtPayloadType } from './strategies/types/jwt-payload.type';
 import { AuthProvidersEnum } from './enums/auth-providers.enum';
 import { SocialType } from 'src/social/types/social.type';
+import { JwtRefreshPayloadType } from './strategies/types/jwt-refresh-payload.type';
 
 export interface IAuthService {
   validateLogin(loginDto: AuthEmailLoginDto): Promise<LoginResponseType>;
@@ -18,4 +19,9 @@ export interface IAuthService {
     authProvider: AuthProvidersEnum,
     socialData: SocialType,
   ): Promise<LoginResponseType>;
+  refreshToken(
+    data: Pick<JwtRefreshPayloadType, 'sessionId'>,
+  ): Promise<Omit<LoginResponseType, 'user'>>;
+
+  logout(data: Pick<JwtRefreshPayloadType, 'sessionId'>);
 }

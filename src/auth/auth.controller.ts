@@ -70,4 +70,22 @@ export class AuthController {
       resetPasswordDto.password,
     );
   }
+
+  @Post('refresh')
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @HttpCode(HttpStatus.OK)
+  public refresh(@Request() request): Promise<Omit<LoginResponseType, 'user'>> {
+    return this.authService.refreshToken({
+      sessionId: request.user.sessionId,
+    });
+  }
+
+  @Post('logout')
+  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async logout(@Request() request): Promise<void> {
+    await this.authService.logout({
+      sessionId: request.user.sessionId,
+    });
+  }
 }
