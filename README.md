@@ -16,6 +16,10 @@ NestJS boilerplate, Auth, TypeORM, MySql, Mailing, Google OAuth20
 - [x] Config Service ([@nestjs/config](https://www.npmjs.com/package/@nestjs/config)).
 - [x] Mailing ([nodemailer](https://www.npmjs.com/package/nodemailer)).
 - [x] Sign in and sign up via email.
+- [x] Confirm account via email verification.
+- [x] Forget password.
+- [x] Reset password.
+- [x] Refresh token.
 - [x] Google OAuth20.
 - [x] Swagger.
 
