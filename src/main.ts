@@ -3,6 +3,10 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { AllConfigType } from './config/config.type';
 
+import { ValidationPipe } from '@nestjs/common';
+import validationOptions from './utils/validation-options';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
@@ -17,6 +21,18 @@ async function bootstrap() {
       exclude: ['/'],
     },
   );
+
+  app.useGlobalPipes(new ValidationPipe(validationOptions));
+
+  const options = new DocumentBuilder()
+    .setTitle('Nest Full Auth API')
+    .setDescription('API docs')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('docs', app, document);
 
   try {
     const PORT = configService.getOrThrow('app.port', { infer: true });

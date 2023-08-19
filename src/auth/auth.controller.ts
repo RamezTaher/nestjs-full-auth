@@ -20,7 +20,9 @@ import { NullableType } from 'src/utils/types/nullable.type';
 import { User } from 'src/users/entities/user.entity';
 import { AuthForgotPasswordDto } from './dtos/auth-forgot-password.dto';
 import { AuthResetPasswordDto } from './dtos/auth-reset-password.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller(Routes.AUTH)
 export class AuthController {
   constructor(
@@ -47,6 +49,7 @@ export class AuthController {
     return this.authService.confirmEmail(confirmEmailDto.hash);
   }
 
+  @ApiBearerAuth()
   @Get('status')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.OK)
@@ -71,6 +74,7 @@ export class AuthController {
     );
   }
 
+  @ApiBearerAuth()
   @Post('refresh')
   @UseGuards(AuthGuard('jwt-refresh'))
   @HttpCode(HttpStatus.OK)
@@ -80,6 +84,7 @@ export class AuthController {
     });
   }
 
+  @ApiBearerAuth()
   @Post('logout')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.NO_CONTENT)

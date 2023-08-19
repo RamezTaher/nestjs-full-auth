@@ -13,7 +13,9 @@ import { IAuthService } from 'src/auth/auth';
 import { IAuthGoogleService } from './auth-google';
 import { AuthGoogleLoginDto } from './dtos/auth-google-login.dto';
 import { AuthProvidersEnum } from 'src/auth/enums/auth-providers.enum';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller(Routes.AUTH_GOOGLE)
 export class AuthGoogleController {
   constructor(
