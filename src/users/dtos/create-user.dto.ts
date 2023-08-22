@@ -1,8 +1,6 @@
 import { Transform } from 'class-transformer';
 
-import { IsEmail, IsNotEmpty, MinLength, Validate } from 'class-validator';
-
-import { IsNotExist } from 'src/utils/validators/is-not-exists.validator';
+import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 import { UserStatus } from '../entities/user.entity';
@@ -13,9 +11,6 @@ export class CreateUserDto {
   @ApiProperty({ example: 'ramez@gmail.com' })
   @Transform(lowerCaseTransformer)
   @IsNotEmpty()
-  @Validate(IsNotExist, ['User'], {
-    message: 'emailAlreadyExists',
-  })
   @IsEmail()
   email: string | null;
 
