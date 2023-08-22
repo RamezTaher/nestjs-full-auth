@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { DeepPartial, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,7 +15,12 @@ export class UsersService implements IUsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  createUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const existingUser = await this.usersRepository.findOne({
+      where: { email: createUserDto.email },
+    });
+    if (existingUser)
+      throw new HttpException('User already exists', HttpStatus.CONFLICT);
     const user = this.usersRepository.create(createUserDto);
     return this.usersRepository.save(user);
   }
